@@ -1,0 +1,46 @@
+stages:
+  data_ingestion:
+    cmd: python src/Classifiers/pipeline/stage_01_data_ingestion.py
+    deps:
+      - src/Classifiers/pipeline/stage_01_data_ingestion.py
+      - src/Classifiers/components/data_ingestion.py
+      - config.yaml
+    outs:
+      - artifacts/raw_data/raw_data.csv
+
+  data_processig:
+    cmd: python src/Classifiers/pipeline/stage_02_data_processing.py
+    deps:
+      - src/Classifiers/pipeline/stage_02_data_processing.py
+      - src/Classifiers/components/rm_outliers_encoding.py
+      - src/Classifiers/components/data_balancing.py
+      - src/Classifiers/components/data_normalization.py
+      - src/Classifiers/components/distribution_normalization.py
+      - config.yaml
+      - artifacts/raw_data/raw_data.csv
+    outs:
+      - artifacts/processed_data/processed_data.csv
+      - artifacts/encoder/encoder.pkl
+      - artifacts/normalizer/normalizer.pkl
+
+  base_model_preparation:
+    cmd: python src/Classifiers/pipeline/stage_03_model_creation.py
+    deps:
+      - src/Classifiers/pipeline/stage_03_model_creation.py
+      - src/Classifiers/components/prepare_base_model.py
+      - config.yaml
+    outs:
+      - artifacts/prepare_base_model/base_model.h5
+
+  training_evaluating:
+    cmd: python src/Classifiers/pipeline/stage_04_NN_training_evaluating.py
+    deps:
+      - src/Classifiers/pipeline/stage_04_NN_training_evaluating.py
+      - src/Classifiers/components/NN_training_evaluating.py
+      - config.yaml
+      - params.yaml
+      - artifacts/processed_data/processed_data.csv
+      - artifacts/prepare_base_model/base_model.h5
+    params:
+      - NN.batch_size
+      - NN.epochs
