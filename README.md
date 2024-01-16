@@ -17,4 +17,70 @@ Dans ce projet, nous utilisons une base de données synthétique issue du jeu de
 - Suivi des expériences avec MLflow
 - Déploiement de modèle avec une API Flask
 
-## Étapes du Projet
+## Installation de projet
+
+### Etape 01
+
+Cloner le répertoire
+
+```bash
+https://github.com/fatihamaazaz/MLOps_Project.git
+```
+
+Ou télécharger le projet et initialiser git
+
+```bash
+git init
+```
+
+### Etape 02
+
+Créer un environnement conda et l'activer après avoir ouvert le dossier du projet
+
+```bash
+conda create -n env_name python=3.11 -y
+```
+
+```bash
+conda activate env_name
+```
+
+### Etape 03
+
+Installer les requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+### Etape 04
+
+Initialiser dvc
+
+```bash
+dvc init
+```
+
+### Etape 04
+
+Exécuter le pipeline
+
+```bash
+dvc repro
+```
+
+### Etape 05
+
+Suivre la performance des modèles
+
+```bash
+mlflow ui
+```
+
+### Etape 06
+
+Déployer la solution
+
+```bash
+python app.py
+```
