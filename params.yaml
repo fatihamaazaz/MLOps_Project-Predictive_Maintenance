@@ -1,0 +1,7 @@
+NN:
+  batch_size: 32
+  epochs: 50
+
+prediction:
+  model: NN model
+  version: 1
