@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Model Prediction Form</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 800px;
+        }
+		.res-part{border:1px solid #dedede;margin-left:20px;height: 210px;width:100%;padding:5px;margin:0px auto;overflow:auto; display: flex; justify-content: center;align-items: center; }
+
+        .container {
+            display: flex;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+			
+            text-align: center;
+			box-sizing: border-box;
+			
+        }
+
+        .form-container {
+            flex: 1;
+            text-align: left;
+            margin-right: 20px;
+			
+        }
+
+        .result-container {
+            flex: 1;
+            text-align: left;
+			display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+			box-sizing: border-box;
+        }
+
+        h1 {
+            color: #1b2d6b;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            color: #555;
+            font-size: 14px;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+		select {
+			padding: 8px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+
+        button {
+            margin-top: 30px;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+		.right-part {
+            border: 1px solid #dedede;
+            padding: 5px;
+            width: 300px;
+            height: 350px;
+			
+        }
+
+		.classification {
+			font-size: 80px;
+			font-weight: bold;
+		}
+
+
+        #resultValue {
+            color: #333;
+            font-size: 14px;
+			display: flex;
+			justify-content: center;
+			align-items: center; 
+			margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h1 class="text-center py-2">Model Prediction Form</h1>
+        <form id="predictionForm" action="{{ url_for('predict_class') }}" method="post">
+            <label for="type">Type</label>
+			<select class="form-control" id="type" required>
+				<option>L</option>
+				<option>M</option>
+				<option>H</option>
+			</select>
+
+            <label for="airTemperature">Air Temperature (K)</label>
+            <input type="number" id="airTemperature" name="airTemperature" step="any" required>
+
+			<label for="processTemperature">Process Temperature (K)</label>
+            <input type="number" id="processTemperature" name="processTemperature" step="any" required>
+
+			<label for="rotation">Rotational speed (rpm)</label>
+            <input type="number" id="rotation" name="rotation" step="any" required>
+
+			<label for="torque">Torque (Nm)</label>
+            <input type="number" id="torque" name="torque" step="any" required>
+
+			<label for="tool">Tool wear (min)</label>
+            <input type="number" id="tool" name="tool" step="any" required>
+
+            <button type="submit">Predict</button>
+        </form>
+    </div>
+
+    <div class="result-container">
+        <div class="right-part">
+            <h1 class="text-center py-2">Prediction Result</h1>
+			<div class="row">
+				<div class="res-part col-md-5"><div class="classification" id="classification"></div></div>
+			</div>
+            <p id="resultValue"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#predictionForm").submit(function (event) {
+            event.preventDefault();
+            var formData = {
+                type: $("#type").val(),
+                airTemperature: $("#airTemperature").val(),
+                processTemperature: $("#processTemperature").val(),
+                rotation: $("#rotation").val(),
+                torque: $("#torque").val(),
+                tool: $("#tool").val(),
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/predict",
+                data: formData,
+                dataType: "json",
+                encode: true,
+            })
+            .done(function (data) {
+                $("#classification").text(data.prediction);
+                $("#resultValue").text(data.message);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
