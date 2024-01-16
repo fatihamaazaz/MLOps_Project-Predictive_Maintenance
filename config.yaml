@@ -1,0 +1,22 @@
+artifacts_root: artifacts
+
+data_ingestion:
+  root_dir: artifacts/raw_data
+  source_URL: https://drive.google.com/file/d/1rvxUxzjCDfaJcj6wD0nUOZVFD3GQxjca/view?usp=drive_link
+  local_data_file: artifacts/raw_data
+
+data_processing:
+  root_dir: artifacts/processed_data
+  source_data_path: artifacts/raw_data/raw_data.csv
+  encoding_model_path: artifacts/encoder
+  normalizing_model_path: artifacts/normalizer
+  local_data_file: artifacts/processed_data
+
+prepare_base_model:
+  root_dir: artifacts/prepare_base_model
+  base_model_path: artifacts/prepare_base_model
+
+training_evaluating:
+  root_dir: artifacts/training_evaluating
+  model_path: artifacts/prepare_base_model/base_model.h5
+  source_data_path: artifacts/processed_data/processed_data.csv
